@@ -13,6 +13,11 @@ EXPOSE 8000
 COPY Pipfile /Pipfile
 COPY Pipfile.lock /Pipfile.lock
 
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev \
+    && apk add libffi-dev libressl-dev \
+    && apk add --no-cache jpeg-dev zlib-dev libjpeg \
+    && apk add rust cargo 
 RUN pip install pipenv && pipenv install --system
 RUN adduser --disabled-password --no-create-home app
 RUN mkdir -p /vol/web/static && \
