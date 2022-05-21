@@ -7,6 +7,7 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
     middle_name = models.CharField(max_length=50, blank=True, default='')
+    hospital_number = models.IntegerField(unique=True, default=0)
 
     age = models.IntegerField(blank=False)
 
@@ -28,9 +29,10 @@ class Patient(models.Model):
     address = models.CharField(max_length=300, blank=False)
     religion = models.CharField(max_length=50, blank=False)
     tribe =  models.CharField(max_length=50, blank=False)
+    
 
     def __str__(self):
-        return f'{self.first_name} + {self.last_name}'
+        return f' {self.hospital_number} --> {self.first_name}  {self.last_name}'
 
 class DoctorAppointmentHistory(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
@@ -64,6 +66,7 @@ class LabAppointmentHistory(models.Model):
     date = models.DateField(auto_now_add=True)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     report = models.TextField(blank=False)
+    image_report = models.FileField(blank=True)
     next_appointment_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
