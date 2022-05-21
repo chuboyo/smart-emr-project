@@ -170,9 +170,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
 
-EMAIL_HOST_USER = 'AKIARO4JB3ZRFZ5LBNXH'
+EMAIL_HOST_USER = 'EMAIL_HOST_USER'
 
-EMAIL_HOST_PASSWORD = 'BM+G+mnO1QHTxhzUFoce9BPiIF5jLzqrTcb2anAZypKg'
+EMAIL_HOST_PASSWORD = 'EMAIL_HOST_PASS'
 
 EMAIL_PORT = 465
 
@@ -180,6 +180,6 @@ EMAIL_USE_SSL = True
 
 EMAIL_USE_TLS = False
 
-DEFAULT_FROM_EMAIL = 'akojichubiyojo1997@gmail.com'
+DEFAULT_FROM_EMAIL = 'DEFAULT_FROM_EMAIL'
 
 ACCOUNT_ADAPTER = 'users.adapter.NoNewUsersAccountAdapter'

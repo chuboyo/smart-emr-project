@@ -20,6 +20,9 @@ services:
       - DB_NAME=emrdb
       - DB_USER=devuser
       - DB_PASS=standard
+      - EMAIL_HOST_USER=AKIARO4JB3ZRFZ5LBNXH
+      - EMAIL_HOST_PASS=BM+G+mnO1QHTxhzUFoce9BPiIF5jLzqrTcb2anAZypKg
+      - DEFAULT_FROM_EMAIL=akojichubiyojo1997@gmail.com
     depends_on:
       - db
 
