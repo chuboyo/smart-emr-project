@@ -20,6 +20,7 @@ services:
       - DB_NAME=emrdb
       - DB_USER=devuser
       - DB_PASS=standard
+      - ALLOWED_HOSTS=*
     depends_on:
       - db
 
