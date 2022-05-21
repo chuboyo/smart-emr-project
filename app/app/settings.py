@@ -153,7 +153,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 
 ACCOUNT_USERNAME_REQUIRED = False 
@@ -163,3 +163,23 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True 
 
 ACCOUNT_UNIQUE_EMAIL = True 
+
+ACCOUNT_SESSION_REMEMBER = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
+
+EMAIL_HOST_USER = 'AKIARO4JB3ZRFZ5LBNXH'
+
+EMAIL_HOST_PASSWORD = 'BM+G+mnO1QHTxhzUFoce9BPiIF5jLzqrTcb2anAZypKg'
+
+EMAIL_PORT = 465
+
+EMAIL_USE_SSL = True
+
+EMAIL_USE_TLS = False
+
+DEFAULT_FROM_EMAIL = 'akojichubiyojo1997@gmail.com'
+
+ACCOUNT_ADAPTER = 'users.adapter.NoNewUsersAccountAdapter'
