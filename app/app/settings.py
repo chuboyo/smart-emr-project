@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'users.apps.UsersConfig',
+    'main',
 ]
 
 MIDDLEWARE = [
