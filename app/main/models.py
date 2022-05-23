@@ -40,6 +40,9 @@ class Patient(models.Model):
     def __str__(self):
         return f' {self.hospital_number} --> {self.first_name}  {self.last_name}'
 
+    def get_absolute_url(self):
+        return reverse('', args=[str(self.id)])
+
 class DoctorAppointmentHistory(models.Model):
     id = models.UUIDField(
         primary_key=True,
@@ -68,6 +71,9 @@ class DoctorAppointmentHistory(models.Model):
     def __str__(self):
         return f'{self.patient} --> {self.date}'
 
+    def get_absolute_url(self):
+        return reverse('', args=[str(self.id)])
+
     class Meta:
         ordering = ['-date']
 
@@ -86,7 +92,10 @@ class LabAppointmentHistory(models.Model):
     next_appointment_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
-            return f'{self.patient} --> {self.date}'
+        return f'{self.patient} --> {self.date}'
+
+    def get_absolute_url(self):
+        return reverse('', args=[str(self.id)])
     
     class Meta:
         ordering = ['-date']
