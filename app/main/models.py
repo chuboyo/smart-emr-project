@@ -1,9 +1,15 @@
+import uuid
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 
 class Patient(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
     middle_name = models.CharField(max_length=50, blank=True, default='')
@@ -35,6 +41,11 @@ class Patient(models.Model):
         return f' {self.hospital_number} --> {self.first_name}  {self.last_name}'
 
 class DoctorAppointmentHistory(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
     hospital_section = models.CharField(max_length=50, blank=False)
@@ -62,6 +73,11 @@ class DoctorAppointmentHistory(models.Model):
 
 
 class LabAppointmentHistory(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
