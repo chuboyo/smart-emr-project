@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{patient.hospital_number}}</h1>
+    <div>
+        <p>Full Name: {{patient.last_name}}, {{patient.middle_name}} {{patient.first_name}}</p>
+        <p>Age: {{patient.age}}</p>
+        <p>Sex: {{patient.sex}}</p>
+        <p>Hospital Number: {{patient.hospital_number}}</p>
+
+        <div>
+            Appointments History: 
+            {% if appointments %}
+                {% for meeting in appointments %}
+                    <p><a href="#">{{meeting.date}}, Created by: {{meeting.created_by}}</a></p>
+                {% endfor %}
+            {% else %}
+                <p>No Appointments yet...</p>
+            {% endif %}
+            <a href="#">Create a new appointment history</a>
+        </div>
+        <div>
+            <a href="{% url 'patient_edit' patient.pk %}">Update Record</a>
+            <a href="{% url 'patient_delete' patient.pk %}">Delete Record</a>
+        </div>
+    </div>
+{% endblock content %}

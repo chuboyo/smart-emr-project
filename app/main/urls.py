@@ -1,11 +1,12 @@
 from django.urls import path
 
-from .views import PatientListView, PatientDetailView, PatientCreateView, PatientUpdateView, PatientDeleteView
-from .views import DoctorAppointmentListView, DoctorAppointmentDetailView, DoctorAppointmentCreateView, DoctorAppointmentUpdateView, DoctorAppointmentDeleteView
-from .views import LabAppointmentListView, LabAppointmentDetailView, LabAppointmentCreateView, LabAppointmentUpdateView, LabAppointmentDeleteView
+from .views import (PatientListView, PatientDetailView, PatientCreateView, PatientUpdateView, PatientDeleteView,
+                    DoctorAppointmentListView, DoctorAppointmentDetailView, DoctorAppointmentCreateView, DoctorAppointmentUpdateView, 
+                    DoctorAppointmentDeleteView, LabAppointmentListView, LabAppointmentDetailView, LabAppointmentCreateView, 
+                    LabAppointmentUpdateView, LabAppointmentDeleteView, PatientSearchResultsListView, HomePageView)
 
 urlpatterns = [
-    path('patient/', PatientListView.as_view(), name='patient_list'),
+    path('patients/', PatientListView.as_view(), name='patient_list'),
     path('patient/<uuid:pk>/', PatientDetailView.as_view(), name='patient_detail'),
     path('patient/new/', PatientCreateView.as_view(), name='patient_new'),
     path('patient/<uuid:pk>/edit/', PatientUpdateView.as_view(), name='patient_edit'),
@@ -20,4 +21,7 @@ urlpatterns = [
     path('lab/new/', LabAppointmentCreateView.as_view(), name='lab_new'),
     path('lab/<uuid:pk>/edit/', LabAppointmentUpdateView.as_view(), name='lab_edit'),
     path('lab/<uuid:pk>/delete/', LabAppointmentDeleteView.as_view(), name='lab_delete'),
+
+    path('patient_search/', PatientSearchResultsListView.as_view(), name='patient_search_results'),
+    path('', HomePageView.as_view(), name='home'),
 ]

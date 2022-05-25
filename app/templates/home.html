@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form action="{% url 'patient_search_results' %}" method="get">
+        <input type="text" name="q", placeholder="Find patient by ID">
+        <input type="submit" value="Search">
+    </form>
+
+    <div>
+        <a href="#"> Advanced Search</a>
+    </div>
+    <div>
+        <p><a href="{% url 'patient_list' %}">{{total_patients}} patients</a> as of today</p>
+        <p>{{doctor_appointments_today}} appointments as of today</p> 
+        <!-- Add link to get appointment history (by day) -->
+        <p><a href="{% url 'patient_new' %}">Add a new patient</a></p>
+    </div>
+{% endblock content %}
