@@ -2,11 +2,15 @@ from django.shortcuts import render
 
 from .models import Patient, DoctorAppointmentHistory, LabAppointmentHistory
 
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from django.urls import reverse_lazy
+
+from datetime import datetime
+
+from .forms import PatientUpdateForm
 
 """patient table views """
 class PatientListView(ListView):
@@ -19,6 +23,13 @@ class PatientDetailView(DetailView):
     context_object_name = 'patient'
     template_name = 'patient/patient_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        patient = self.get_object()
+        appointments = DoctorAppointmentHistory.objects.filter(patient=patient.pk).all()
+        context.update({'appointments': appointments})
+        return context
+
 class PatientCreateView(CreateView):
     model = Patient
     template_name = 'patient/new_patient.html'
@@ -27,16 +38,16 @@ class PatientCreateView(CreateView):
 class PatientUpdateView(UpdateView):
     model = Patient
     template_name = 'patient/edit_patient.html'
-    fields = ['first_name', 'last_name', 'middle_name', 'hospital_number',
-        'age', 'gender_choices', 'sex', 'nationality', 'state_of_origin',
-        'marriage_choices', 'marriage_status', 'address', 'religion', 
-        'tribe',
-    ]
+    '''fields = ['first_name', 'last_name', 'middle_name', 'hospital_number',
+        'age', 'sex', 'nationality', 'state_of_origin', 'marriage_status', 
+        'address', 'religion', 'tribe',
+    ]'''
+    form_class = PatientUpdateForm
 
 class PatientDeleteView(DeleteView):
     model = Patient
     template_name = 'patient/delete_patient.html'
-    success_url = reverse_lazy('')
+    success_url = reverse_lazy('patient_list')
 
 
 """doctor appointment history views """
@@ -98,4 +109,23 @@ class LabAppointmentDeleteView(DeleteView):
     model = LabAppointmentHistory
     template_name = 'lab/delete_lab_appointment.html'
     success_url = reverse_lazy('')
-# Create your views here.
+
+class HomePageView(TemplateView):
+    template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        total_patients = Patient.objects.all().count()
+        doctor_appointments_today = DoctorAppointmentHistory.objects.filter(date = datetime.today().date()).count()
+        context.update({'total_patients': total_patients, 'doctor_appointments_today': doctor_appointments_today})
+        return context
+
+
+class PatientSearchResultsListView(ListView):
+    model = Patient
+    context_object_name = 'patients'
+    template_name = 'patient/patient_search_results.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        return Patient.objects.filter(hospital_number=query)

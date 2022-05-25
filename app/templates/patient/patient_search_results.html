@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        {% if patients %}
+            {% for patient in patients %}
+                <div class="patient-data">
+                    <h1>{{ patient.hospital_number }}</h1>
+                    <h1>{{patient.last_name}}, {{patient.middle_name}} {{patient.first_name}} </h1> 
+                    <h1>{{patient.age}}</h1>
+                    <h1>{{ patient.sex }}</h1>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h1>No data found!!!</h1>
+    {% endif %}
+    </div>
+{% endblock content %}

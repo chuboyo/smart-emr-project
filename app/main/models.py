@@ -4,6 +4,16 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 
+gender_choices = [
+    ('male', 'Male'),
+    ('female', 'Female')
+]
+
+marriage_choices = [
+    ('married', 'Married'),
+    ('single', 'Single')
+]
+
 class Patient(models.Model):
     id = models.UUIDField(
         primary_key=True,
@@ -18,19 +28,12 @@ class Patient(models.Model):
     age = models.IntegerField(blank=False)
 
     # The first element in each tuple is the actual value to be set on the model, and the second element is the human-readable name.
-    gender_choices = [
-        ('male', 'Male'),
-        ('female', 'Female')
-    ]
+    
     sex = models.CharField(max_length=6, choices=gender_choices, default='female')
     # state of origin wasn't populated with choices because it'd be too long, the form would be customized instead
     # this thread might be useful: https://stackoverflow.com/questions/66302329/how-to-create-dropdown-box-with-forms-modelform-in-django
     nationality = models.CharField(max_length=50, blank=False)
     state_of_origin = models.CharField(max_length=50, blank=False)
-    marriage_choices = [
-        ('married', 'Married'),
-        ('single', 'Single')
-    ]
     marriage_status = models.CharField(max_length=10, choices=marriage_choices, default='single')
     address = models.CharField(max_length=300, blank=False)
     religion = models.CharField(max_length=50, blank=False)
@@ -41,7 +44,7 @@ class Patient(models.Model):
         return f' {self.hospital_number} --> {self.first_name}  {self.last_name}'
 
     def get_absolute_url(self):
-        return reverse('', args=[str(self.id)])
+        return reverse('patient_detail', args=[str(self.id)])
 
 class DoctorAppointmentHistory(models.Model):
     id = models.UUIDField(
