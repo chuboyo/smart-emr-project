@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <p>Date: {{ doctor_appointment.date }}</p>
+        <p>Section: {{ doctor_appointment.hospital_section }}</p>
+        <p>Patient: {{ doctor_appointment.patient }}</p>
+        <p>Created By: {{ doctor_appointment.created_by }}</p>
+        <div>
+            <p>Presenting Complain:</p>
+            <p>{{ doctor_appointment.presenting_complain }}</p>
+        </div>
+        <div>
+            <p>History of Presenting Complain: </p> 
+            <p>{{ doctor_appointment.history_of_preseting_complain }}</p>
+        </div>
+        <div>
+            <p>Past Medical and Surgical History:</p>
+            <p>{{ doctor_appointment.past_medical_and_surgical_history }}</p>
+        </div>
+        <div>
+            <p>Drugs and Allergies:</p>
+            <p>{{ doctor_appointment.drugs_and_allergies }}</p>
+        </div>
+        <div>
+            <p>Family and Social History:</p>
+            <p>{{ doctor_appointment.family_and_social_history }}</p>
+        </div>
+        <div>
+            <p>Other History:</p>
+            <p>{{ doctor_appointment.other_history }}</p>
+        </div>
+        <div>
+            <p>Provisional Diagnosis:</p>
+            <p>{{ doctor_appointment.provisional_diagnosis }}</p>
+        </div>
+        <div>
+            <p>Physical Examination:</p>
+            <p>{{ doctor_appointment.physical_examination }}</p>
+        </div>
+        <div>
+            <p>Created By:</p>
+            <p>{{ doctor_appointment.created_by }}</p>
+        </div>
+        <div>
+            <p>Lab Appointment:</p>
+            <p>{{ doctor_appointment.lab_appointment }}</p>
+            <a href="{% url 'lab_new' doctor_appointment.patient.pk %}">Create New Lab Appointment</a>
+        </div>
+        <div>
+            <p>Next Appointment</p>
+            <p>{{ doctor_appointment.next_appointment_date }}</p>
+        </div>
+        <a href="{% url 'doctor_edit' doctor_appointment.pk %}">Update Record</a>
+        <a href="{% url 'doctor_delete' doctor_appointment.pk %}">Delete Record</a>
+    </div>
+{% endblock content %}
