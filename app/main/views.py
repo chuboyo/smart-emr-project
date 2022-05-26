@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .models import Patient, DoctorAppointmentHistory, LabAppointmentHistory
 
@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 
 from datetime import datetime
 
-from .forms import PatientUpdateForm
+from .forms import PatientUpdateForm, CreateDoctorAppointmentHistoryForm, CreateLabAppointmentHistoryForm
 
 """patient table views """
 class PatientListView(ListView):
@@ -26,8 +26,9 @@ class PatientDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         patient = self.get_object()
-        appointments = DoctorAppointmentHistory.objects.filter(patient=patient.pk).all()
-        context.update({'appointments': appointments})
+        doc_appointments = DoctorAppointmentHistory.objects.filter(patient=patient.pk).all()
+        lab_appointments = LabAppointmentHistory.objects.filter(patient=patient.pk).all()
+        context.update({'doctor_appointments': doc_appointments, 'lab_appointments':lab_appointments})
         return context
 
 class PatientCreateView(CreateView):
@@ -47,6 +48,7 @@ class PatientUpdateView(UpdateView):
 class PatientDeleteView(DeleteView):
     model = Patient
     template_name = 'patient/delete_patient.html'
+    context_object_name = 'patient'
     success_url = reverse_lazy('patient_list')
 
 
@@ -64,7 +66,17 @@ class DoctorAppointmentDetailView(DetailView):
 class DoctorAppointmentCreateView(CreateView):
     model = DoctorAppointmentHistory
     template_name = 'doctor/new_doctor_appointment.html'
-    fields = '__all__'
+    form_class = CreateDoctorAppointmentHistoryForm
+
+    def dispatch(self, request, *args, **kwargs): # get patient data that you're creating appointment for (via url)
+        self.patient = get_object_or_404(Patient, pk=kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    # Overriding get_initial method to pre-populate the patient field of our form
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['patient'] = self.patient
+        return initial
 
 class DoctorAppointmentUpdateView(UpdateView):
     model = DoctorAppointmentHistory
@@ -79,7 +91,8 @@ class DoctorAppointmentUpdateView(UpdateView):
 class DoctorAppointmentDeleteView(DeleteView):
     model = DoctorAppointmentHistory
     template_name = 'doctor/delete_doctor_appointment.html'
-    success_url = reverse_lazy('')
+    context_object_name = 'doctor_appointment'
+    success_url = reverse_lazy('doctor_list')
 
 
 """lab report views """
@@ -96,7 +109,17 @@ class LabAppointmentDetailView(DetailView):
 class LabAppointmentCreateView(CreateView):
     model = LabAppointmentHistory
     template_name = 'lab/new_lab_appointment.html'
-    fields = '__all__'
+    form_class = CreateLabAppointmentHistoryForm
+
+    def dispatch(self, request, *args, **kwargs): # get patient data that you're creating appointment for (via url)
+        self.patient = get_object_or_404(Patient, pk=kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['patient'] = self.patient
+        return initial
+
 
 class LabAppointmentUpdateView(UpdateView):
     model = LabAppointmentHistory
@@ -108,7 +131,13 @@ class LabAppointmentUpdateView(UpdateView):
 class LabAppointmentDeleteView(DeleteView):
     model = LabAppointmentHistory
     template_name = 'lab/delete_lab_appointment.html'
-    success_url = reverse_lazy('')
+    context_object_name = 'lab_appointment'
+    # success_url = reverse_lazy('lab_list')
+
+    def get_success_url(self):
+        lab_appointment = self.get_object()
+        pk = lab_appointment.patient.id
+        return reverse_lazy('patient_detail', kwargs={'pk': pk})
 
 class HomePageView(TemplateView):
     template_name = 'home.html'

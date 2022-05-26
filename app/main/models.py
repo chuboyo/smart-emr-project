@@ -57,14 +57,14 @@ class DoctorAppointmentHistory(models.Model):
     hospital_section = models.CharField(max_length=50, blank=False)
 
     # appointment report section (a fieldset and legend can be used in the form)
-    presenting_complain = models.TextField(default='')
-    history_of_presenting_complain = models.TextField(default='')
-    past_medical_and_surgical_history = models.TextField(default='')
-    drugs_and_allergies = models.TextField(default='')
-    family_and_social_history = models.TextField(default='')
-    other_history = models.TextField(default='')
-    provisional_diagnosis = models.TextField(default='')
-    physical_examination = models.TextField(default='')
+    presenting_complain = models.TextField(default='', blank=True)
+    history_of_presenting_complain = models.TextField(default='', blank=True)
+    past_medical_and_surgical_history = models.TextField(default='', blank=True)
+    drugs_and_allergies = models.TextField(default='', blank=True)
+    family_and_social_history = models.TextField(default='', blank=True)
+    other_history = models.TextField(default='', blank=True)
+    provisional_diagnosis = models.TextField(default='', blank=True)
+    physical_examination = models.TextField(default='', blank=True)
     # end of appointment report section
 
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
@@ -75,7 +75,7 @@ class DoctorAppointmentHistory(models.Model):
         return f'{self.patient} --> {self.date}'
 
     def get_absolute_url(self):
-        return reverse('', args=[str(self.id)])
+        return reverse('patient_detail', args=[str(self.patient.id)])
 
     class Meta:
         ordering = ['-date']
@@ -98,7 +98,7 @@ class LabAppointmentHistory(models.Model):
         return f'{self.patient} --> {self.date}'
 
     def get_absolute_url(self):
-        return reverse('', args=[str(self.id)])
+        return reverse('patient_detail', args=[str(self.patient.id)])
     
     class Meta:
         ordering = ['-date']

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form action="" method="post"> {% csrf_token %}
+        Are you sure you want to remove record???
+        <input type="submit" value="Confirm">
+        <a href="{% url 'doctor_detail' doctor_appointment.pk %}">Go Back</a>
+    </form>
+{% endblock content %}

@@ -9,15 +9,26 @@
         <p>Hospital Number: {{patient.hospital_number}}</p>
 
         <div>
-            Appointments History: 
-            {% if appointments %}
-                {% for meeting in appointments %}
-                    <p><a href="#">{{meeting.date}}, Created by: {{meeting.created_by}}</a></p>
+            <h2>Appointments History:</h2>
+            <p>Doctors:</p> 
+            {% if doctor_appointments %}
+                {% for meeting in doctor_appointments %}
+                    <p><a href="{% url 'doctor_detail' meeting.pk %}">{{meeting.date}}, Created by: {{meeting.created_by}}</a></p>
                 {% endfor %}
             {% else %}
                 <p>No Appointments yet...</p>
             {% endif %}
-            <a href="#">Create a new appointment history</a>
+            
+            <p>Lab:</p>
+            {% if lab_appointments %}
+                {% for meeting in lab_appointments %}
+                    <p><a href="{% url 'lab_detail' meeting.pk %}">{{meeting.date}}, Created by: {{meeting.created_by}}</a></p>
+                {% endfor %}
+            {% else %}
+                <p>No Appointments yet...</p>
+            {% endif %}
+            
+            <a href="{% url 'doctor_new' patient.pk %}">Add new appointment history</a>
         </div>
         <div>
             <a href="{% url 'patient_edit' patient.pk %}">Update Record</a>
