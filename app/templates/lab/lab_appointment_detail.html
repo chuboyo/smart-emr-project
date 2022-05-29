@@ -5,12 +5,14 @@
         <p>Date: {{ lab_appointment.date }}</p>
         <p>Patient: {{ lab_appointment.patient }}</p>
         <p>Created By: {{ lab_appointment.created_by }}</p>
+        {% if lab_appointment.image_report %}
+            <img src="{{ lab_appointment.image_report.url }}" alt="">
+        {% endif %}
         <div>
             <p>Report:</p>
             <p>{{ lab_appointment.report }}</p>
-        </div>
-        
         <a href="{% url 'lab_edit' lab_appointment.pk %}">Update Record</a>
         <a href="{% url 'lab_delete' lab_appointment.pk %}">Delete Record</a>
+        </div>
     </div>
 {% endblock content %}

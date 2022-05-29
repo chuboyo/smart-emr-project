@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from contextlib import _RedirectStream
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Patient, DoctorAppointmentHistory, LabAppointmentHistory
 
@@ -10,15 +11,28 @@ from django.urls import reverse_lazy
 
 from datetime import datetime
 
-from .forms import PatientUpdateForm, CreateDoctorAppointmentHistoryForm, CreateLabAppointmentHistoryForm
+from .forms import PatientUpdateForm, CreateDoctorAppointmentHistoryForm, CreateLabAppointmentHistoryForm, CreateLabAppointmentUpdateForm
+
+from django.conf import settings
+
+from django.core.files.storage import FileSystemStorage
+
+from django.contrib.auth.mixins import ( 
+    LoginRequiredMixin, PermissionRequiredMixin 
+)
+
+
+
 
 """patient table views """
-class PatientListView(ListView):
+class PatientListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'main.view_patient'
     model = Patient
     context_object_name = 'patient_list'
     template_name = 'patient/patient_list.html'
 
-class PatientDetailView(DetailView):
+class PatientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    permission_required = 'main.view_patient'
     model = Patient
     context_object_name = 'patient'
     template_name = 'patient/patient_detail.html'
@@ -31,12 +45,14 @@ class PatientDetailView(DetailView):
         context.update({'doctor_appointments': doc_appointments, 'lab_appointments':lab_appointments})
         return context
 
-class PatientCreateView(CreateView):
+class PatientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'main.add_patient'
     model = Patient
     template_name = 'patient/new_patient.html'
     fields = '__all__'
 
-class PatientUpdateView(UpdateView):
+class PatientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'main.change_patient'
     model = Patient
     template_name = 'patient/edit_patient.html'
     '''fields = ['first_name', 'last_name', 'middle_name', 'hospital_number',
@@ -45,7 +61,8 @@ class PatientUpdateView(UpdateView):
     ]'''
     form_class = PatientUpdateForm
 
-class PatientDeleteView(DeleteView):
+class PatientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'main.delete_patient'
     model = Patient
     template_name = 'patient/delete_patient.html'
     context_object_name = 'patient'
@@ -53,17 +70,20 @@ class PatientDeleteView(DeleteView):
 
 
 """doctor appointment history views """
-class DoctorAppointmentListView(ListView):
+class DoctorAppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'main.view_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     context_object_name = 'doctor_appointment_list'
     template_name = 'doctor/doctor_appointment_list.html'
 
-class DoctorAppointmentDetailView(DetailView):
+class DoctorAppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    permission_required = 'main.view_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     context_object_name = 'doctor_appointment'
     template_name = 'doctor/doctor_appointment_detail.html'
 
-class DoctorAppointmentCreateView(CreateView):
+class DoctorAppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'main.add_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     template_name = 'doctor/new_doctor_appointment.html'
     form_class = CreateDoctorAppointmentHistoryForm
@@ -78,7 +98,12 @@ class DoctorAppointmentCreateView(CreateView):
         initial['patient'] = self.patient
         return initial
 
-class DoctorAppointmentUpdateView(UpdateView):
+    def form_valid(self, form): 
+        form.instance.created_by = self.request.user 
+        return super().form_valid(form)
+
+class DoctorAppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'main.change_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     template_name = 'doctor/edit_doctor_appointment.html'
     fields = [
@@ -88,7 +113,8 @@ class DoctorAppointmentUpdateView(UpdateView):
         'physical_examination', 'lab_appointment', 'next_appointment_date',
     ]
 
-class DoctorAppointmentDeleteView(DeleteView):
+class DoctorAppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'main.delete_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     template_name = 'doctor/delete_doctor_appointment.html'
     context_object_name = 'doctor_appointment'
@@ -96,20 +122,35 @@ class DoctorAppointmentDeleteView(DeleteView):
 
 
 """lab report views """
-class LabAppointmentListView(ListView):
+class LabAppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'main.view_labappointmenthistory'
     model = LabAppointmentHistory
     context_object_name = 'lab_appointment_list'
     template_name = 'lab/lab_appointment_list.html'
 
-class LabAppointmentDetailView(DetailView):
+class LabAppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    permission_required = 'main.view_labappointmenthistory'
     model = LabAppointmentHistory
     context_object_name = 'lab_appointment'
     template_name = 'lab/lab_appointment_detail.html'
 
-class LabAppointmentCreateView(CreateView):
+class LabAppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'main.add_labappointmenthistory'
     model = LabAppointmentHistory
     template_name = 'lab/new_lab_appointment.html'
     form_class = CreateLabAppointmentHistoryForm
+
+    def model_form_upload(request):
+        if request.method == 'POST':
+            form = CreateLabAppointmentHistoryForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect('lab_detail')
+        else:
+            form = CreateLabAppointmentHistoryForm()
+        return render(request, 'lab_new', {
+            'form': form
+        })
 
     def dispatch(self, request, *args, **kwargs): # get patient data that you're creating appointment for (via url)
         self.patient = get_object_or_404(Patient, pk=kwargs['pk'])
@@ -120,15 +161,31 @@ class LabAppointmentCreateView(CreateView):
         initial['patient'] = self.patient
         return initial
 
+    def form_valid(self, form): 
+        form.instance.created_by = self.request.user 
+        return super().form_valid(form)
 
-class LabAppointmentUpdateView(UpdateView):
+
+class LabAppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'main.change_labappointmenthistory'
     model = LabAppointmentHistory
     template_name = 'lab/edit_lab_appointment.html'
-    fields = [
-        'report', 'image_report', 'next_appointment_date',
-    ]
+    form_class = CreateLabAppointmentUpdateForm
 
-class LabAppointmentDeleteView(DeleteView):
+    def model_form_upload(request):
+        if request.method == 'POST':
+            form = CreateLabAppointmentUpdateForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect('lab_detail')
+        else:
+            form = CreateLabAppointmentUpdateForm()
+        return render(request, 'lab_edit', {
+            'form': form
+        })
+
+class LabAppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'main.delete_labappointmenthistory'
     model = LabAppointmentHistory
     template_name = 'lab/delete_lab_appointment.html'
     context_object_name = 'lab_appointment'
@@ -150,7 +207,7 @@ class HomePageView(TemplateView):
         return context
 
 
-class PatientSearchResultsListView(ListView):
+class PatientSearchResultsListView(LoginRequiredMixin, ListView):
     model = Patient
     context_object_name = 'patients'
     template_name = 'patient/patient_search_results.html'

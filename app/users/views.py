@@ -1,4 +1,4 @@
-from django.shortcuts import render
+"""from django.shortcuts import render
 
 from django.contrib.auth import get_user_model
 
@@ -16,5 +16,5 @@ class UserDetailView(DetailView):
 class UserUpdateView(UpdateView):
     model = get_user_model()
     template_name = 'user/edit_user.html'
-    fields = '__all__'
+    fields = '__all__'"""
 # Create your views here.

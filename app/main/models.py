@@ -69,7 +69,7 @@ class DoctorAppointmentHistory(models.Model):
 
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     lab_appointment = models.TextField(default='None')
-    next_appointment_date = models.DateField(blank=True, null=True)
+    next_appointment_date = models.DateField(blank=True, null=True,)
 
     def __str__(self):
         return f'{self.patient} --> {self.date}'

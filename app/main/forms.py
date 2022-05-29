@@ -2,7 +2,6 @@ from django import forms
 
 from .models import Patient, DoctorAppointmentHistory, LabAppointmentHistory
 
-
 class PatientUpdateForm(forms.ModelForm):
     def __init__(self,  *args, **kwargs):
         super(PatientUpdateForm, self).__init__(*args, **kwargs)
@@ -31,7 +30,12 @@ class CreateDoctorAppointmentHistoryForm(forms.ModelForm):
 
     class Meta:
         model = DoctorAppointmentHistory
-        fields = '__all__'
+        fields = [
+            'patient', 'hospital_section', 'presenting_complain', 'history_of_presenting_complain',
+            'past_medical_and_surgical_history', 'drugs_and_allergies', 'family_and_social_history',
+            'other_history', 'provisional_diagnosis', 'physical_examination', 'lab_appointment', 
+            'next_appointment_date',
+        ]
 
 class CreateLabAppointmentHistoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -39,4 +43,15 @@ class CreateLabAppointmentHistoryForm(forms.ModelForm):
 
     class Meta:
         model = LabAppointmentHistory
-        fields = '__all__'
+        fields = [
+            'patient', 'report', 'image_report', 'next_appointment_date',
+        ]
+class CreateLabAppointmentUpdateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = LabAppointmentHistory
+        fields = [
+            'report', 'image_report', 'next_appointment_date',
+        ]

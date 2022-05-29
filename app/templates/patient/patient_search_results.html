@@ -5,7 +5,7 @@
         {% if patients %}
             {% for patient in patients %}
                 <div class="patient-data">
-                    <h1>{{ patient.hospital_number }}</h1>
+                    <h1><a href="{% url 'patient_detail' patient.pk %}">{{ patient.hospital_number }}</a></h1>
                     <h1>{{patient.last_name}}, {{patient.middle_name}} {{patient.first_name}} </h1> 
                     <h1>{{patient.age}}</h1>
                     <h1>{{ patient.sex }}</h1>
