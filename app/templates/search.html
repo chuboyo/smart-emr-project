@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <form action="" method="get">
+            Choose record to search for:
+            <select name="" id="record-type">
+                <option value="Lab">Laboratory Records</option>
+                <option value="Doctor" selected>Doctor Appointment Records</option>
+            </select>
+            Choose time range:
+            <select name="" id="record-range">
+                <option value="30" selected>Last 30 days</option>
+                <option value="90">Last Three Months</option>
+                <option value="365">Last 365 Days</option>
+                <option value="all">All Records</option>
+            </select>
+            <input type="hidden" name="range" id="input-range">
+            <input type="submit" value="Search">
+        </form>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        let record_type = document.querySelector("#record-type");
+        let record_range = document.querySelector("#record-range");
+        let form = document.querySelector("form")
+        form.action = window.location.origin + "/doctor_search"
+
+        let input_range = document.querySelector("#input-range");
+        input_range.value = record_range.value;
+
+        record_type.addEventListener("change", ()=>{
+            setFormAction(record_type.value);
+        });
+
+        record_range.addEventListener("change", ()=>{
+            input_range.value = record_range.value;
+        });
+
+        function setFormAction(value) {
+            if (value === "Doctor") {
+                form.action = window.location.origin + "/doctor_search"
+            } else {
+                form.action = window.location.origin + "/lab_search"
+            }
+        }
+    </script>
+{% endblock js %}

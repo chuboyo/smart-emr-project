@@ -3,7 +3,8 @@ from django.urls import path
 from .views import (PatientListView, PatientDetailView, PatientCreateView, PatientUpdateView, PatientDeleteView,
                     DoctorAppointmentListView, DoctorAppointmentDetailView, DoctorAppointmentCreateView, DoctorAppointmentUpdateView, 
                     DoctorAppointmentDeleteView, LabAppointmentListView, LabAppointmentDetailView, LabAppointmentCreateView, 
-                    LabAppointmentUpdateView, LabAppointmentDeleteView, PatientSearchResultsListView, HomePageView)
+                    LabAppointmentUpdateView, LabAppointmentDeleteView, PatientSearchResultsListView, HomePageView, AdvancedSearchView,
+                    LabAppointmentFilterView, DoctorAppointmentFilterView)
 
 urlpatterns = [
     path('patients/', PatientListView.as_view(), name='patient_list'),
@@ -24,4 +25,7 @@ urlpatterns = [
 
     path('patient_search/', PatientSearchResultsListView.as_view(), name='patient_search_results'),
     path('', HomePageView.as_view(), name='home'),
+    path('advanced_search/', AdvancedSearchView.as_view(), name='advanced_search'),
+    path('doctor_search/', DoctorAppointmentFilterView.as_view(), name='doctor_search'),
+    path('lab_search/',LabAppointmentFilterView.as_view(), name='lab_search')
 ]

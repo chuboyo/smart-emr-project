@@ -1,4 +1,3 @@
-from contextlib import _RedirectStream
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Patient, DoctorAppointmentHistory, LabAppointmentHistory
@@ -13,15 +12,13 @@ from datetime import datetime
 
 from .forms import PatientUpdateForm, CreateDoctorAppointmentHistoryForm, CreateLabAppointmentHistoryForm, CreateLabAppointmentUpdateForm
 
-from django.conf import settings
-
 from django.core.files.storage import FileSystemStorage
 
 from django.contrib.auth.mixins import ( 
     LoginRequiredMixin, PermissionRequiredMixin 
 )
 
-
+from datetime import datetime, timedelta
 
 
 """patient table views """
@@ -215,3 +212,32 @@ class PatientSearchResultsListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         return Patient.objects.filter(hospital_number=query)
+
+class AdvancedSearchView(LoginRequiredMixin, TemplateView):
+    template_name = 'search.html'
+
+class DoctorAppointmentFilterView(LoginRequiredMixin, ListView):
+    model = DoctorAppointmentHistory
+    context_object_name = 'doctor_appointments'
+    template_name = 'doctor/appointment_search_results.html'
+
+    def get_queryset(self):
+        days = self.request.GET.get('range')
+        try:
+            duration = datetime.today() - timedelta(days=int(days)) # get days difference
+            return DoctorAppointmentHistory.objects.filter(date__gte=duration)
+        except:
+            return DoctorAppointmentHistory.objects.all()
+
+class LabAppointmentFilterView(LoginRequiredMixin, ListView):
+    model = LabAppointmentHistory
+    context_object_name = 'lab_appointments'
+    template_name = 'lab/appointment_search_results.html'
+
+    def get_queryset(self):
+        days = self.request.GET.get('range')
+        try:
+            duration = datetime.today() - timedelta(days=int(days)) # get days difference
+            return LabAppointmentHistory.objects.filter(date__gte=duration)
+        except:
+            return LabAppointmentHistory.objects.all()
