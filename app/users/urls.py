@@ -7,3 +7,4 @@ urlpatterns = [
     path('profile/<uuid:pk>/edit/', UserUpdateView.as_view(), name='user_edit'),
     path('profile/create', UserCreateView.as_view(), name='user_create'),
 ]
+

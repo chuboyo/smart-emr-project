@@ -1,7 +1,5 @@
 from django.shortcuts import render
 
-from django.http import Http404
-
 from django.urls import reverse_lazy
 
 from django.contrib.auth import get_user_model
