@@ -1,17 +1,34 @@
 from django.shortcuts import render
 
+from django.http import Http404
+
+from django.urls import reverse_lazy
+
 from django.contrib.auth import get_user_model
 
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 
 from django.views.generic.edit import UpdateView
+
+from .forms import CustomUserCreationForm
 
 
 class UserDetailView(DetailView):
     model = get_user_model()
     context_object_name = 'user'
-    template_name = 'user/user_detail.html'
+    template_name = 'account/user_detail.html'
 
+
+class UserCreateView(CreateView):
+    model = get_user_model()
+    template_name = 'account/new_user.html'
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('login')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
 
 class UserUpdateView(UpdateView):
     model = get_user_model()
