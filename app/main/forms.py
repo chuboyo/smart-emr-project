@@ -14,7 +14,6 @@ class PatientUpdateForm(forms.ModelForm):
             ('married', 'Married'),
             ('single', 'Single')
         ]
-        self.fields['gender'] = forms.ChoiceField(choices=gender_choices)
         self.fields['marriage_status'] = forms.ChoiceField(choices=marriage_choices)
 
     class Meta:
