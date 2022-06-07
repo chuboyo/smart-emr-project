@@ -23,7 +23,7 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
     middle_name = models.CharField(max_length=50, blank=True, default='')
-    hospital_number = models.IntegerField(unique=True, default=0)
+    hospital_id = models.CharField(max_length=64, unique=True, blank=True)
 
     age = models.IntegerField(blank=False)
 
@@ -41,7 +41,7 @@ class Patient(models.Model):
     
 
     def __str__(self):
-        return f' {self.hospital_number} --> {self.first_name}  {self.last_name}'
+        return f' {self.hospital_id} --> {self.first_name}  {self.last_name}'
 
     def get_absolute_url(self):
         return reverse('patient_detail', args=[str(self.id)])

@@ -8,7 +8,7 @@
                     <p>Date: {{appointment.date}}</p>
                     <p>Patient: {{appointment.patient}}</p>
                     <p>Created By: {{appointment.created_by}}</p>
-                    <a href="{% url 'lab_detail' appointment.pk %}">View More</a>
+                    <a href="{{ appointment.get_absolute_url }}">View More</a>
                 </div>  
             {% endfor %}
         {% else %}

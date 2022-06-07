@@ -27,6 +27,7 @@ class UserCreateView(CreateView):
         if not request.user.is_superuser:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
+    
 
 class UserUpdateView(UpdateView):
     model = get_user_model()

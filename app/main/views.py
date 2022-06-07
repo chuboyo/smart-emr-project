@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 
 from datetime import datetime
 
-from .forms import PatientUpdateForm, CreateDoctorAppointmentHistoryForm, CreateLabAppointmentHistoryForm, CreateLabAppointmentUpdateForm
+from .forms import PatientUpdateForm, CreateDoctorAppointmentHistoryForm, CreateLabAppointmentHistoryForm, CreateLabAppointmentUpdateForm, PatientCreateForm
 
 from django.core.files.storage import FileSystemStorage
 
@@ -45,8 +45,8 @@ class PatientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
 class PatientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'main.add_patient'
     model = Patient
+    form_class = PatientCreateForm
     template_name = 'patient/new_patient.html'
-    fields = '__all__'
 
 class PatientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'main.change_patient'

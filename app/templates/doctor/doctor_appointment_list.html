@@ -10,7 +10,7 @@
                     <p>Patient: {{appointment.patient}}</p>
                     <p>Created By: {{appointment.created_by}}</p>
                     <p>Next appointment: {{appointment.next_appointment_date}}</p>
-                    <a href="{% url 'doctor_detail' appointment.pk %}">View More</a>
+                    <a href="{{ appointment.get_absolute_url }}">View More</a>
                 </div>  
             {% endfor %}
         {% else %}

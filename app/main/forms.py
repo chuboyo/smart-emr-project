@@ -2,6 +2,26 @@ from django import forms
 
 from .models import Patient, DoctorAppointmentHistory, LabAppointmentHistory
 
+from secrets import token_hex
+
+from datetime import date
+
+
+class PatientCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PatientCreateForm, self).__init__(*args, **kwargs)
+
+    def clean_hospital_id(self):
+        last_name = self.cleaned_data['last_name']
+        token = token_hex(2)
+        today = date.today()
+        hospital_id = f'{last_name}/0{today.month}{str(today.year)[2:]}/{token}'
+        return hospital_id
+
+    class Meta:
+        model = Patient
+        fields = '__all__'
+
 class PatientUpdateForm(forms.ModelForm):
     def __init__(self,  *args, **kwargs):
         super(PatientUpdateForm, self).__init__(*args, **kwargs)
@@ -15,13 +35,14 @@ class PatientUpdateForm(forms.ModelForm):
             ('single', 'Single')
         ]
         self.fields['marriage_status'] = forms.ChoiceField(choices=marriage_choices)
-
+    
     class Meta:
         model = Patient
-        fields = ['first_name', 'last_name', 'middle_name', 'hospital_number',
-        'age', 'sex', 'nationality', 'state_of_origin', 'marriage_status', 
-        'address', 'religion', 'tribe',
-    ]
+        fields = [
+            'first_name', 'last_name', 'middle_name',
+            'age', 'sex', 'nationality', 'state_of_origin', 'marriage_status', 
+            'address', 'religion', 'tribe',
+        ]
 
 class CreateDoctorAppointmentHistoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

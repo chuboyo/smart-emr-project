@@ -3,7 +3,17 @@
 {% block content %}
     <div>
         <form action="" method="post"> {% csrf_token %}
-            {{form.as_p}}
+            <p>First Name: {{ form.first_name }}</p>
+            <p>Middle Name: {{ form.middle_name }} </p>
+            <p>Last Name: {{ form.last_name }}</p>
+            <p>Age: {{ form.age }}</p>
+            <p>Sex: {{ form.sex }}</p>
+            <p>Nationality: {{ form.nationality }}</p>
+            <p>State of Origin: {{ form.state_of_origin }}</p>
+            <p>Marriage Status: {{ form.marriage_status }}</p>
+            <p>Home Address: {{ form.address }}</p>
+            <p>Religion: {{ form.religion }}</p>
+            <p>Tribe: {{form.tribe}}</p>
             <input type="submit" value="Create Record">
         </form>
     </div>
