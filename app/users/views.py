@@ -12,15 +12,17 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 from .models import CustomUser
 
+from django.contrib.auth.mixins import ( LoginRequiredMixin)
 
-class UserDetailView(DetailView):
+
+class UserDetailView(LoginRequiredMixin, DetailView):
     model = get_user_model()
     context_object_name = 'user'
     template_name = 'account/user_detail.html'
     pk_url_kwarg = 'pk'
 
 
-class UserCreateView(CreateView):
+class UserCreateView(LoginRequiredMixin, CreateView):
     model = get_user_model()
     template_name = 'account/new_user.html'
     form_class = CustomUserCreationForm
@@ -32,12 +34,12 @@ class UserCreateView(CreateView):
         return super().dispatch(request, *args, **kwargs)
     
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = get_user_model()
     template_name = 'account/edit_user.html'
     form_class = CustomUserChangeForm
 
-class UserDeleteView(DeleteView):
+class UserDeleteView(LoginRequiredMixin, DeleteView):
     model = get_user_model()
     template_name = 'account/delete_user.html'
     success_url = reverse_lazy('home')
