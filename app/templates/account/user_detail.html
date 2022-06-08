@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <p>username: {{ user.username }}</p>
+        <p>email: {{ user.email }}</p>
+        <p>firstname: {{ user.first_name }}</p>
+        <p>lastname: {{ user.last_name }}</p>
+    </div>
+    <a href="{% url 'user_edit' user.pk %}">Edit Details</Details></a><br>
+    <a href="{% url 'account_change_password' %}">Change Password</a><br>
+    <a href="{% url 'account_reset_password' %}">Reset Password</a><br>
+    <a href="{% url 'user_delete' user.pk %}">Delete User</Details></a>
+{% endblock content %} 

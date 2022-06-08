@@ -13,11 +13,14 @@
         <div>
             <ul>
                 <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="#">Account</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'account_logout' %}">Logout</a></li>
+                    <li><a href="{{ user.get_absolute_url }}">Account</a></li>
                 {% else %}
                     <li><a href="{% url 'account_login' %}">Login</a></li>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <li><a href="{% url 'user_create' %}">Create User</a></li>
                 {% endif %}
             </ul>
         </div>
