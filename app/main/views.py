@@ -49,8 +49,14 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
     template_name = 'patient/new_patient.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_superuser or request.user.is_clerical_staff):
+        if not (request.user.is_superuser):
             return render(request, template_name='errors/404.html', status=404)
+        else:
+            try:
+                if not request.user.is_clerical_staff:
+                    return render(request, template_name='errors/404.html', status=404)
+            except:
+                return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
     
 
