@@ -1,18 +1,87 @@
 {% extends 'base.html' %}
+{% load static %}
 
+{% block navbar %}
+    
+{% endblock navbar %}
 {% block content %}
-    <form action="{% url 'patient_search_results' %}" method="get">
-        <input type="text" name="q", placeholder="Find patient by ID">
-        <input type="submit" value="Search">
-    </form>
+    <header class="hero-nav">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">Mediwave</span>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">Account</a></li>
+                            {% if user.is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" href="{% url 'user_create' %}">+ Profile</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'patient_new' %}">+ Patient</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+            </div>
+        </nav>
 
-    <div>
-        <a href="{% url 'advanced_search' %}"> Advanced Search</a>
-    </div>
-    <div>
-        <p><a href="{% url 'patient_list' %}">{{total_patients}} patients</a> as of today</p>
-        <p>{{doctor_appointments_today}} appointments as of today</p> 
+        <div class="search-container">
+            <form class="" id="patient_search_form" action="{% url 'patient_search_results' %}" method="get">
+                <input type="text" name="q", placeholder="Find patient by ID">
+                <button class="search-button"><i class="fa-solid fa-xl fa-magnifying-glass"></i></button>
+            </form>
+            <div class="mt-4">
+                <a class="white link" href="{% url 'advanced_search' %}"> Advanced Search</a>
+            </div>   
+        </div>
+
+    </header>
+
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-sm-6 my-2">
+                <div class="data-card text-center">
+                    <div class="image-card">
+                        <img class="img-fluid" src="{% static 'images/user.png' %}" alt="patients_img">
+                    </div>
+                    <div class="mt-4">
+                        <p>{{total_patients}} patients as of today</p>
+                        <a class="app-button my-4" href="{% url 'patient_list' %}">View</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 my-2">
+                <div class="data-card text-center">
+                    <div class="image-card">
+                        <img class="" src="{% static 'images/appointments.jpg' %}" alt="appointments_img">
+                    </div>
+                    <div class="mt-4">
+                        <p>{{doctor_appointments_today}} appointments as of today</p>
+                        <a class="app-button my-4" id="doctor-list" href="{% url 'doctor_list' %}">View</a>
+                    </div>
+                </div> 
+            </div>
+        </div>
         <!-- Add link to get appointment history (by day) -->
-        <p><a href="{% url 'patient_new' %}">Add a new patient</a></p>
     </div>
 {% endblock content %}
+
+{% block footer %}
+        <div class="footer container-fluid py-4 shadow-lg">
+            <div class="row">
+                <div class="col">
+                    <ul class="d-flex">
+                        <li class=""><a class="black link" href="">Privacy Policy</a></li>
+                        <li class=""><a class="black link" href="">About Us</a></li>
+                        <li class=""><a class="black link" href="">Terms of Use</a></li>
+                    </ul>
+                </div>
+                <div class="col text-center">
+                   <p>© 2022 Mediwave. All Rights Reserved | Design By TCA</p>
+                </div>
+            </div>
+        </div>
+    {% endblock footer %}

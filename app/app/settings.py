@@ -131,11 +131,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/static/'
-MEDIA_URL = 'static/media/'
+STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
+
+STATIC_URL = '/static/'
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
+
+# MEDIA_URL = 'static/media/'
 
 STATIC_ROOT = '/vol/web/static'
-MEDIA_ROOT = '/vol/web/media'
+# MEDIA_ROOT = '/vol/web/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -160,7 +167,7 @@ AUTHENTICATION_BACKENDS = (
 
 ACCOUNT_USERNAME_REQUIRED = False 
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
 ACCOUNT_EMAIL_REQUIRED = True 
 
@@ -185,3 +192,5 @@ EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 ACCOUNT_ADAPTER = 'users.adapter.NoNewUsersAccountAdapter'
+
+ACCOUNT_FORMS = {'login': 'users.forms.CustomLoginForm'}

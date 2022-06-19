@@ -21,7 +21,7 @@ class UserCreateView(CreateView):
     model = get_user_model()
     template_name = 'account/new_user.html'
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy('login')
+    # success_url = model.get_absolute_url()
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_superuser:
