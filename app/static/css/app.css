@@ -265,6 +265,11 @@ a.squared:hover {
     border: 1px solid #7d7d7d;
 }
 
+/* password_reset.html */
+.width-50 {
+    width: 50% !important;
+}
+
 /* Media Queries */
 @media (min-width: 992px){
     .navbar li {
@@ -295,6 +300,10 @@ a.squared:hover {
 
     .center-container {
         width: 95% !important;
+    }
+
+    .width-50 {
+        width: 100% !important;
     }
 
     .text-center-sm {

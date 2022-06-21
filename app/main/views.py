@@ -92,7 +92,10 @@ class DoctorAppointmentListView(LoginRequiredMixin, ListView):
     template_name = 'doctor/doctor_appointment_list.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
@@ -103,7 +106,10 @@ class DoctorAppointmentDetailView(LoginRequiredMixin, DetailView):
     template_name = 'doctor/doctor_appointment_detail.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
@@ -115,7 +121,10 @@ class DoctorAppointmentCreateView(LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs): # get patient data that you're creating appointment for (via url)
         self.patient = get_object_or_404(Patient, pk=kwargs['pk'])
-        if not (request.user.is_superuser or request.user.is_doctor):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_doctor):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
@@ -136,7 +145,10 @@ class DoctorAppointmentUpdateView(LoginRequiredMixin, UpdateView):
     form_class = CreateDoctorAppointmentUpdateForm
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_superuser or request.user.is_doctor):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_doctor):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
@@ -148,7 +160,10 @@ class DoctorAppointmentDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('doctor_list')
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_superuser or request.user.is_doctor):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_doctor):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
@@ -161,7 +176,10 @@ class LabAppointmentListView(LoginRequiredMixin, ListView):
     template_name = 'lab/lab_appointment_list.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
@@ -172,7 +190,10 @@ class LabAppointmentDetailView(LoginRequiredMixin, DetailView):
     template_name = 'lab/lab_appointment_detail.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
@@ -196,7 +217,10 @@ class LabAppointmentCreateView(LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs): # get patient data that you're creating appointment for (via url)
         self.patient = get_object_or_404(Patient, pk=kwargs['pk'])
-        if not (request.user.is_superuser or request.user.is_lab_staff):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_lab_staff):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
@@ -229,7 +253,10 @@ class LabAppointmentUpdateView(LoginRequiredMixin, UpdateView):
         })
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_superuser or request.user.is_lab_staff):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_lab_staff):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
@@ -246,7 +273,10 @@ class LabAppointmentDeleteView(LoginRequiredMixin, DeleteView):
         return reverse_lazy('patient_detail', kwargs={'pk': pk})
 
     def dispatch(self, request, *args, **kwargs):
-        if not (request.user.is_superuser or request.user.is_lab_staff):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_lab_staff):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
             return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 

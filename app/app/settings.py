@@ -193,4 +193,8 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 ACCOUNT_ADAPTER = 'users.adapter.NoNewUsersAccountAdapter'
 
-ACCOUNT_FORMS = {'login': 'users.forms.CustomLoginForm'}
+ACCOUNT_FORMS = {
+                'login': 'users.forms.CustomLoginForm', 
+                'reset_password': 'users.forms.CustomResetPasswordForm', 
+                'change_password': 'users.forms.CustomChangePasswordForm',
+            }

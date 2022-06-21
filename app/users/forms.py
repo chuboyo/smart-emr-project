@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model #get current user model i.e
                                                # customUser
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm #get usercreation and userchangeforms
 
-from allauth.account.forms import LoginForm
+from allauth.account.forms import LoginForm, ResetPasswordForm, ChangePasswordForm
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -19,9 +19,14 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ('email', 'username', 'first_name', 'last_name', 'is_doctor', 'is_lab_staff', 'is_clerical_staff',)
 
 class CustomUserChangeForm(UserChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, field in self.fields.items():
+            field.widget.attrs.update({'class': 'form-control'})
+        
     class Meta:
         model = get_user_model()
-        fields = ('email', 'username',)
+        fields = ('email', 'username', 'first_name', 'last_name')
 
 class CustomLoginForm(LoginForm):
     def __init__(self, *args, **kwargs):
@@ -32,3 +37,14 @@ class CustomLoginForm(LoginForm):
         self.fields['password'].widget.attrs.update({
             'class': 'form-input'
         })
+
+class CustomResetPasswordForm(ResetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomResetPasswordForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})
+
+class CustomChangePasswordForm(ChangePasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for _, field in self.fields.items():
+            field.widget.attrs.update({'class': 'form-control'})

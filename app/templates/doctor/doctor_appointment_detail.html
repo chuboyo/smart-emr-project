@@ -78,7 +78,7 @@
             <div class="col-sm-6 border-bottom">{{ doctor_appointment.next_appointment_date }}</div>
         </div>
         
-        <div class="row w-75 mx-auto center-container my-3">
+        <div class="row w-75 mx-auto center-container my-3" id="last_div">
             <div class="col-sm-5 mx-auto py-4 text-end text-center-sm"> <!--text-start-sm is my custom class-->
                 <a class="link button btn-dark squared" href="{% url 'doctor_edit' doctor_appointment.pk %}">Update Record</a>
             </div>
