@@ -14,9 +14,10 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">Account</a></li>
                             {% if user.is_authenticated %}
-                                <li class="nav-item"><a class="nav-link" href="{% url 'patient_new' %}">+ Record</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'user_create' %}">+ Profile</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'patient_new' %}">+ Patient</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ user.get_absolute_url }}">Account</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
                             {% else %}
                                 <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
@@ -109,6 +110,9 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
 
 {% block js %}
     <script>

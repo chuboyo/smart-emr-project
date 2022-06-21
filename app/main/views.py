@@ -10,7 +10,10 @@ from django.urls import reverse_lazy
 
 from datetime import datetime
 
-from .forms import PatientUpdateForm, CreateDoctorAppointmentHistoryForm, CreateLabAppointmentHistoryForm, CreateLabAppointmentUpdateForm, PatientCreateForm
+from .forms import (
+                    PatientUpdateForm, CreateDoctorAppointmentHistoryForm, CreateLabAppointmentHistoryForm, CreateLabAppointmentUpdateForm, 
+                    PatientCreateForm, CreateDoctorAppointmentUpdateForm
+                )
 
 from django.core.files.storage import FileSystemStorage
 
@@ -22,14 +25,14 @@ from datetime import datetime, timedelta
 
 
 """patient table views """
-class PatientListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    permission_required = 'main.view_patient'
+class PatientListView(LoginRequiredMixin, ListView):
+    #permission_required = 'main.view_patient'
     model = Patient
     context_object_name = 'patient_list'
     template_name = 'patient/patient_list.html'
 
-class PatientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    permission_required = 'main.view_patient'
+class PatientDetailView(LoginRequiredMixin, DetailView):
+    #permission_required = 'main.view_patient'
     model = Patient
     context_object_name = 'patient'
     template_name = 'patient/patient_detail.html'
@@ -42,51 +45,78 @@ class PatientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
         context.update({'doctor_appointments': doc_appointments, 'lab_appointments':lab_appointments})
         return context
 
-class PatientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    permission_required = 'main.add_patient'
+class PatientCreateView(LoginRequiredMixin, CreateView):
+    #permission_required = 'main.add_patient'
     model = Patient
     form_class = PatientCreateForm
     template_name = 'patient/new_patient.html'
 
-class PatientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'main.change_patient'
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if not (request.user.is_superuser or request.user.is_clerical_staff):
+                return render(request, template_name='errors/404.html', status=404)
+        else:
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+    
+
+class PatientUpdateView(LoginRequiredMixin, UpdateView):
+    #permission_required = 'main.change_patient'
     model = Patient
     template_name = 'patient/edit_patient.html'
-    '''fields = ['first_name', 'last_name', 'middle_name', 'hospital_number',
-        'age', 'sex', 'nationality', 'state_of_origin', 'marriage_status', 
-        'address', 'religion', 'tribe',
-    ]'''
     form_class = PatientUpdateForm
 
-class PatientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'main.delete_patient'
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_clerical_staff):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+
+class PatientDeleteView(LoginRequiredMixin, DeleteView):
+    #permission_required = 'main.delete_patient'
     model = Patient
     template_name = 'patient/delete_patient.html'
     context_object_name = 'patient'
     success_url = reverse_lazy('patient_list')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_clerical_staff):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+
 
 """doctor appointment history views """
-class DoctorAppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    permission_required = 'main.view_doctorappointmenthistory'
+class DoctorAppointmentListView(LoginRequiredMixin, ListView):
+    #permission_required = 'main.view_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     context_object_name = 'doctor_appointment_list'
     template_name = 'doctor/doctor_appointment_list.html'
 
-class DoctorAppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    permission_required = 'main.view_doctorappointmenthistory'
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+
+class DoctorAppointmentDetailView(LoginRequiredMixin, DetailView):
+    #permission_required = 'main.view_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     context_object_name = 'doctor_appointment'
     template_name = 'doctor/doctor_appointment_detail.html'
 
-class DoctorAppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    permission_required = 'main.add_doctorappointmenthistory'
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+
+class DoctorAppointmentCreateView(LoginRequiredMixin, CreateView):
+    #permission_required = 'main.add_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     template_name = 'doctor/new_doctor_appointment.html'
     form_class = CreateDoctorAppointmentHistoryForm
 
     def dispatch(self, request, *args, **kwargs): # get patient data that you're creating appointment for (via url)
         self.patient = get_object_or_404(Patient, pk=kwargs['pk'])
+        if not (request.user.is_superuser or request.user.is_doctor):
+            return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
     # Overriding get_initial method to pre-populate the patient field of our form
@@ -99,40 +129,55 @@ class DoctorAppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, C
         form.instance.created_by = self.request.user 
         return super().form_valid(form)
 
-class DoctorAppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'main.change_doctorappointmenthistory'
+class DoctorAppointmentUpdateView(LoginRequiredMixin, UpdateView):
+    #permission_required = 'main.change_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     template_name = 'doctor/edit_doctor_appointment.html'
-    fields = [
-        'hospital_section', 'presenting_complain', 'history_of_presenting_complain',
-        'past_medical_and_surgical_history', 'drugs_and_allergies', 
-        'family_and_social_history', 'other_history', 'provisional_diagnosis',
-        'physical_examination', 'lab_appointment', 'next_appointment_date',
-    ]
+    form_class = CreateDoctorAppointmentUpdateForm
 
-class DoctorAppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'main.delete_doctorappointmenthistory'
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_doctor):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+
+class DoctorAppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    #permission_required = 'main.delete_doctorappointmenthistory'
     model = DoctorAppointmentHistory
     template_name = 'doctor/delete_doctor_appointment.html'
     context_object_name = 'doctor_appointment'
     success_url = reverse_lazy('doctor_list')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_doctor):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+
 
 """lab report views """
-class LabAppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    permission_required = 'main.view_labappointmenthistory'
+class LabAppointmentListView(LoginRequiredMixin, ListView):
+    #permission_required = 'main.view_labappointmenthistory'
     model = LabAppointmentHistory
     context_object_name = 'lab_appointment_list'
     template_name = 'lab/lab_appointment_list.html'
 
-class LabAppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    permission_required = 'main.view_labappointmenthistory'
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+
+class LabAppointmentDetailView(LoginRequiredMixin, DetailView):
+    #permission_required = 'main.view_labappointmenthistory'
     model = LabAppointmentHistory
     context_object_name = 'lab_appointment'
     template_name = 'lab/lab_appointment_detail.html'
 
-class LabAppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    permission_required = 'main.add_labappointmenthistory'
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_doctor or request.user.is_lab_staff):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+
+class LabAppointmentCreateView(LoginRequiredMixin, CreateView):
+    #permission_required = 'main.add_labappointmenthistory'
     model = LabAppointmentHistory
     template_name = 'lab/new_lab_appointment.html'
     form_class = CreateLabAppointmentHistoryForm
@@ -151,6 +196,8 @@ class LabAppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
 
     def dispatch(self, request, *args, **kwargs): # get patient data that you're creating appointment for (via url)
         self.patient = get_object_or_404(Patient, pk=kwargs['pk'])
+        if not (request.user.is_superuser or request.user.is_lab_staff):
+            return render(request, template_name='errors/404.html', status=404)
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
@@ -163,8 +210,8 @@ class LabAppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return super().form_valid(form)
 
 
-class LabAppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'main.change_labappointmenthistory'
+class LabAppointmentUpdateView(LoginRequiredMixin, UpdateView):
+    #permission_required = 'main.change_labappointmenthistory'
     model = LabAppointmentHistory
     template_name = 'lab/edit_lab_appointment.html'
     form_class = CreateLabAppointmentUpdateForm
@@ -181,8 +228,13 @@ class LabAppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Upda
             'form': form
         })
 
-class LabAppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'main.delete_labappointmenthistory'
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_lab_staff):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
+
+class LabAppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    #permission_required = 'main.delete_labappointmenthistory'
     model = LabAppointmentHistory
     template_name = 'lab/delete_lab_appointment.html'
     context_object_name = 'lab_appointment'
@@ -192,6 +244,11 @@ class LabAppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Dele
         lab_appointment = self.get_object()
         pk = lab_appointment.patient.id
         return reverse_lazy('patient_detail', kwargs={'pk': pk})
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_lab_staff):
+            return render(request, template_name='errors/404.html', status=404)
+        return super().dispatch(request, *args, **kwargs)
 
 class HomePageView(TemplateView):
     template_name = 'home.html'

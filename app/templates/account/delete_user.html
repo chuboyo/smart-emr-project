@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<form action="" method="post"> {% csrf_token %}
+    Are you sure you want to remove {{user.username}}???
+    <input type="submit" value="Confirm">
+</form>
+{% endblock content %}

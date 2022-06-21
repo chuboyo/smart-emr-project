@@ -1,12 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div>
-    <p>Update Appointment: </p>
-    <form action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Update">
-    </form>
-</div>
+    <div class="container py-4">
+        <p class="text-center fs-3">Update Record</p>
+        <form class="center-form width-100" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="container mt-3">
+                <label for="id_patient">Report:
+            </div>
+            <div class="container">{{ form.report }}</div>
+
+            <div class="container mt-3">
+                <label for="id_patient">Image:
+                <div class="">{{ form.image_report }}</div>
+            </div>
+            
+            <div class="container mt-3">
+                <label for="id_patient">Next Appointment:
+                <div class="">{{ form.next_appointment_date }}</div>
+            </div>
+            
+            <div class="container mt-4">
+                <input class="button squared button-dark" type="submit" value="Update Record">
+            </div>
+        </form>
+    </div>
 {% endblock content %}
