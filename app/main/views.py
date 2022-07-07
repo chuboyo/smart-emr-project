@@ -298,7 +298,7 @@ class PatientSearchResultsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q')
-        return Patient.objects.filter(hospital_number=query)
+        return Patient.objects.filter(hospital_id=query)
 
 class AdvancedSearchView(LoginRequiredMixin, TemplateView):
     template_name = 'search.html'
