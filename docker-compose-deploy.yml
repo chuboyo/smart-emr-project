@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    restart: always
+    volumes:
+      - static-data:/vol/web
+    env_file:
+      - .env
+    environment:
+      - DEBUG=0
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      - DJANGO_SUPERUSER_EMAIL=akojichubiyojo1997@gmail.com
+      - DJANGO_SUPERUSER_USERNAME=chuboyo
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13-alpine
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+
+  nginx:
+    build:
+      context: ./nginx
+    restart: always
+    volumes:
+      - static-data:/vol/web
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+
+volumes:
+  postgres-data:
+  static-data:
