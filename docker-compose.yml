@@ -34,6 +34,6 @@ services:
     environment:
       - POSTGRES_DB=emrdb
       - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=standard 
+      - POSTGRES_PASSWORD=standard
 
     

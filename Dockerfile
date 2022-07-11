@@ -4,6 +4,7 @@ LABEL maintainer="akojichubiyojo1997@gmail.com"
 ENV PYTHONUNBUFFERED 1
 
 COPY ./app /app
+COPY ./entrypoint.sh /
 
 WORKDIR /app
 EXPOSE 8000
@@ -23,8 +24,11 @@ RUN adduser --disabled-password --no-create-home app
 RUN mkdir -p /vol/web/static && \
     mkdir -p /vol/web/media && \
     chown -R app:app /vol && \
-    chmod -R 755 /vol
+    chmod -R 755 /vol 
+    
    
-
-
 USER app
+
+ENV PATH="/py/bin:$PATH"
+
+ENTRYPOINT [ "sh", "/entrypoint.sh" ]

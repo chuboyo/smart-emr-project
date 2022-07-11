@@ -16,7 +16,7 @@ body {
 
 /* home.html */
 .hero-nav {
-    background-image: url('/static/images/hero_img.png');
+    background-image: url('/static/static/images/hero_img.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     max-width: 100%;
