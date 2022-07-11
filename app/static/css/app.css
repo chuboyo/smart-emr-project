@@ -134,7 +134,7 @@ body {
 
 /* login.html */
 .wrap {
-    background-image: url('/static/images/Frame 1.png');
+    
     background-repeat: no-repeat;
     background-size: 100% 100%;
     height: 100vh;
@@ -142,9 +142,12 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
     color: white;
-} 
+}
+
+#login-wrapper {
+    background-image: url('/static/images/Frame 1.png');
+}
 
 .wrap i {
     position: absolute;
@@ -221,7 +224,6 @@ body {
 /* new_user.html */
 #profile-create-wrapper {
     background-image: url('/static/images/new_user_frame.png');
-    height: 100vh;
 }
 
 #newProfileForm {
