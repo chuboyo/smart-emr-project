@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container py-4">
+        <p class="fs-3 text-center mb-4">{{patient.hospital_id}}</p>
+        <div class="row w-75 center-container mx-auto my-2">
+            <div class="col-sm-3">Full Name:</div>
+            <div class="col-sm-6 border-bottom">{{patient.last_name}}, {{patient.middle_name}} {{patient.first_name}}</div>
+        </div>
+
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-3">Age:</div>
+            <div class="col-sm-6 border-bottom">{{patient.age}}</div>
+        </div>
+
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-3">Hospital Number:</div>
+            <div class="col-sm-6 border-bottom">{{patient.hospital_id}}</div>
+        </div>
+        
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-3">Sex:</div>
+            <div class="col-sm-3 border-bottom">{{patient.sex}}</div>
+        </div>
+
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-3">Marriage Status:</div>
+            <div class="col-sm-3 border-bottom">{{patient.marriage_status}}</div>
+        </div>
+
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-3">Home Address:</div>
+            <div class="col-sm-6 border-bottom">{{patient.address}}</div>
+        </div>
+
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-3">Nationality:</div>
+            <div class="col-sm-6 border-bottom">{{patient.nationality}}</div>
+        </div>
+
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-3">State of Origin:</div>
+            <div class="col-sm-6 border-bottom">{{patient.state_of_origin}}</div>
+        </div>
+
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-3">Tribe:</div>
+            <div class="col-sm-6 border-bottom">{{patient.tribe}}</div>
+        </div>
+
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-3">Religion:</div>
+            <div class="col-sm-6 border-bottom">{{patient.religion}}</div>
+        </div>
+        <div class="row w-75 mx-auto center-container my-2">
+            <div class="col-sm-5 mx-auto py-4 text-end text-center-sm"> <!--text-start-sm is my custom class-->
+                <a class="link button btn-dark squared" href="{% url 'patient_edit' patient.pk %}">Update Record</a>
+            </div>
+            <div class="col-sm-5 mx-auto py-4 text-center-sm">
+                <a class="link button btn-danger squared" href="{% url 'patient_delete' patient.pk %}">Delete Record</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-75 center-container mx-auto">
+        <p class="fs-4 text-center border-bottom py-4">Appointments History:</p>
+        <p class="fs-5 text-center">Doctors:</p>
+        <div class="container-fluid py-4 border-bottom">
+            {% if doctor_appointments %}
+            <div class="row container justify-content-md-center">
+                {% for meeting in doctor_appointments %}
+                <div class="col-sm-3 border shadow py-2 mx-2">
+                    <p class="text-secondary">{{meeting.date}}</p>
+                    <p class="text-secondary"> Created by: {{meeting.created_by}}</p>
+                    <p class="text-center">
+                        <a class="link button button-dark squared px-4" href="{% url 'doctor_detail' meeting.pk %}">View</a>
+                        <a class="link btn-danger squared px-4" href="{% url 'doctor_delete' meeting.pk %}">Delete</a>
+                    </p>
+                </div>
+                {% endfor %}        
+            </div>
+            {% else %}
+                <div class="container w-25">
+                    <img src="{% static 'images/blank-note.png' %}" alt="" class="img-fluid">
+                    <p class="fs-6 text-center text-secondary">Nothing to show yet</p> 
+                </div>
+            {% endif %}
+            <div class="text-center mt-4">
+                <a class="link btn-success squared" href="{% url 'doctor_new' patient.pk %}"> + Add new</a>
+            </div>
+        </div> 
+        
+        <p class="fs-5 text-center">Laboratory:</p>
+        <div class="container-fluid border-bottom py-4">
+            {% if lab_appointments %}
+            <div class="row container justify-content-md-center">
+                {% for meeting in lab_appointments %}
+                <div class="col-sm-3 border shadow py-2 mx-2">
+                    <p class="text-secondary">{{meeting.date}}</p>
+                    <p class="text-secondary"> Created by: {{meeting.created_by}}</p>
+                    <p class="text-center"> 
+                        <a class="link button button-dark squared px-4" href="{% url 'lab_detail' meeting.pk %}">View</a>
+                        <a class="link btn-danger squared px-4" href="{% url 'lab_delete' meeting.pk %}">Delete</a>
+                    </p>
+                </div>
+                {% endfor %}        
+            </div>
+            
+            {% else %}
+            <div class="container w-25">
+                <img src="{% static 'images/blank-note.png' %}" alt="" class="img-fluid">
+                <p class="fs-6 text-center text-secondary">Nothing to show yet</p> 
+            </div>
+            {% endif %}
+            <div class="text-center mt-4" id="last_div">
+                <a class="link btn-success squared" href="{% url 'lab_new' patient.pk %}">+ Add new</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        var last_div_pos = document.querySelector('#last_div').getBoundingClientRect();
+        var footer =  document.querySelector('.footer');
+        var footer_pos = footer.getBoundingClientRect();
+        if (last_div_pos.bottom >= footer_pos.top) { // if there is an overlap
+            footer.classList.remove("fixed-bottom");
+        }
+    </script>
+{% endblock js %}

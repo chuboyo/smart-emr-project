@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container-fluid py-4">
+        {% if lab_appointments %}
+            <div class="row container-fluid justify-content-md-center w-100 mx-auto" id="last_div">
+                {% for appointment in lab_appointments %}
+                <div class="col-sm-3 border shadow py-1 m-2">
+                    <p class="text-secondary lh-sm"><small>{{appointment.date}}</small></p>
+                    <p class="text-secondary lh-sm"><small>{{appointment.patient.last_name}}, {{appointment.patient.middle_name}} {{appointment.patient.first_name}}</small></p>
+                    <p class="text-secondary lh-sm"><small>{{appointment.patient.hospital_id}}</small></p>
+    
+                    <p class="text-center"> 
+                        <a class="link button button-dark squared px-4 d-inline-block my-1" href="{% url 'lab_detail' appointment.pk %}">View</a>
+                    </p>
+                </div>  
+                {% endfor %}
+            </div>
+            
+        {% else %}
+            <div class="container w-50 mx-auto" id="last_div">
+                <img src="{% static 'images/blank-note.png' %}" alt="" class="img-fluid">
+                <p class="fs-6 text-center text-secondary">Nothing to show Here</p> 
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        var last_div_pos = document.querySelector('#last_div').getBoundingClientRect();
+        var footer =  document.querySelector('.footer');
+        var footer_pos = footer.getBoundingClientRect();
+        if (last_div_pos.bottom >= footer_pos.top) { // if there is an overlap
+            footer.classList.remove("fixed-bottom");
+        }
+    </script>
+{% endblock js %}

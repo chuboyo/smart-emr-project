@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Log In{% endblock title %}
+{% block navbar %} {% endblock navbar %}
+
+{% block content %}
+<div class="wrap" id="login-wrapper">
+    <!-- <img src="{% static 'images/Frame 1.png' %}" alt="frame-img"> -->
+    <div class="container d-flex flex-column align-items-center py-4" id="login-container">
+        <h2>Log In</h2> 
+        <form method="post">
+            {% csrf_token %}
+            <div class="row my-4">
+                <div class="col">
+                    <i class="fa-solid fa-user fa-lg"></i>
+                    {{form.login}}
+                </div>
+            </div>
+            <div class="row my-4">
+                <div class="col">
+                    <i class="fa-solid fa-lock fa-lg"></i>
+                    {{form.password}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-end"><a class="white link" id="reset" href="{% url 'account_reset_password' %}">Reset</a></div>
+                <div class="col mx-auto"><button class="button button-dark" type="submit">Log In</button></div>
+            </div>
+            <div class="container-fluid mt-2">
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </form>
+    </div> 
+</div>
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
+
+{% block js %}
+    <script>
+        let resetBtn = document.querySelector("#reset");
+        let username_field = document.querySelector("#id_login");
+        let
+    </script>
+{% endblock js %}

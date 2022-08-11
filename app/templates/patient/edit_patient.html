@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container py-4">
+        <form class="center-form width-100" action="" method="post"> {% csrf_token %}
+            <p class="text-center fs-3">Update record for: {{patient.hospital_id}}</p>
+            <div class="container mt-3">
+                <label for="id_first_name">First Name: <span class="text-danger">*</span></label>
+                <div class="">{{ form.first_name }}</div>
+            </div>
+            <div class="container mt-3">
+                <label for="id_middle_name">Middle Name: </label>
+                <div class="">{{ form.middle_name }}</div>
+            </div>
+
+            <div class="container mt-3">
+                <label for="id_last_name">Last Name: <span class="text-danger">*</span></label>
+                 <div class="">{{ form.last_name }}</div>
+            </div>
+
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col">
+                        <label for="id_age">Age: <span class="text-danger">*</span></label>
+                        <div class="">{{ form.age}}</div>
+                    </div>
+                    <div class="col">
+                        <label for="id_sex">Sex: <span class="text-danger">*</span></label>
+                        <div class="">{{ form.sex }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container mt-3">
+                <label for="id_nationality">Nationality: <span class="text-danger">*</span></label>
+                <div class="">{{ form.nationality}}</div>
+            </div>
+            
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col">
+                        <label for="id_state_of_origin">State of Origin: <span class="text-danger">*</span></label>
+                        <div class="">{{ form.state_of_origin }}</div>
+                    </div>
+                    <div class="col">
+                        <label for="id_tribe">Tribe: <span class="text-danger">*</span></label>
+                    <div class="">{{ form.tribe }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col">
+                        <label for="id_marriage_status">Marriage Status: <span class="text-danger">*</span></label>
+                        <div class="">{{ form.marriage_status }}</div>
+                    </div>
+                    <div class="col">
+                        <label for="id_religion">Religion: <span class="text-danger">*</span></label>
+                        <div class="">{{ form.religion }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-3">
+                <label for="id_address">Home Address: <span class="text-danger">*</span></label>
+                <div class="">{{ form.address }}</div>
+            </div>
+            <div class="container mt-4" id="last_div">
+                <input class="button squared button-dark" type="submit" value="Update Record">
+            </div>
+        </form>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        var last_div_pos = document.querySelector('#last_div').getBoundingClientRect();
+        var footer =  document.querySelector('.footer');
+        var footer_pos = footer.getBoundingClientRect();
+        if (last_div_pos.bottom >= footer_pos.top) { // if there is an overlap
+            footer.classList.remove("fixed-bottom");
+        }
+    </script>
+{% endblock js %}

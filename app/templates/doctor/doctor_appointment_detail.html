@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container py-4">
+        <p class="fs-3 text-center mb-4">{{doctor_appointment.patient.hospital_id}}</p>
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Patient:</div>
+            <div class="col-sm-6 border-bottom">{{ doctor_appointment.patient}}</div>
+        </div>
+
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Date:</div>
+            <div class="col-sm-6 border-bottom">{{ doctor_appointment.date }}</div>
+        </div>
+
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Section:</div>
+            <div class="col-sm-6 border-bottom">{{ doctor_appointment.hospital_section }}</div>
+        </div>
+        
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Created By:</div>
+            <div class="col-sm-6 border-bottom">{{ doctor_appointment.created_by }}</div>
+        </div>
+
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Presenting Complain:</div>
+            <div class="col-sm-6 border py-2">{{ doctor_appointment.presenting_complain }}</div>
+        </div>
+        
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">History of Presenting Complain:</div>
+            <div class="col-sm-6 border py-2">{{ doctor_appointment.history_of_preseting_complain }}</div>
+        </div>
+
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Past Medical and Surgical History:</div>
+            <div class="col-sm-6 border py-2">{{ doctor_appointment.past_medical_and_surgical_history }}</div>
+        </div>
+        
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Drugs and Allergies:</div>
+            <div class="col-sm-6 border py-2">{{ doctor_appointment.drugs_and_allergies }}</div>
+        </div>
+        
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Family and Social History:</div>
+            <div class="col-sm-6 border py-2">{{ doctor_appointment.family_and_social_history }}</div>
+        </div>
+
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Other History:</div>
+            <div class="col-sm-6 border py-2">{{ doctor_appointment.other_history }}</div>
+        </div>
+        
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Provisional Diagnosis:</div>
+            <div class="col-sm-6 border py-2">{{ doctor_appointment.provisional_diagnosis }}</div>
+        </div>
+
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Physical Examination:</div>
+            <div class="col-sm-6 border py-2">{{ doctor_appointment.physical_examination }}</div>
+        </div>
+        
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Created By:</div>
+            <div class="col-sm-6 border-bottom">{{ doctor_appointment.created_by }}</div>
+        </div>
+        
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Lab Appointment:</div>
+            <div class="col-sm-6 border-bottom">{{ doctor_appointment.lab_appointment }}</div>
+        </div>
+
+        <div class="row w-75 center-container mx-auto my-3">
+            <div class="col-sm-3">Next Appointment:</div>
+            <div class="col-sm-6 border-bottom">{{ doctor_appointment.next_appointment_date }}</div>
+        </div>
+        
+        <div class="row w-75 mx-auto center-container my-3" id="last_div">
+            <div class="col-sm-5 mx-auto py-4 text-end text-center-sm"> <!--text-start-sm is my custom class-->
+                <a class="link button btn-dark squared" href="{% url 'doctor_edit' doctor_appointment.pk %}">Update Record</a>
+            </div>
+            <div class="col-sm-5 mx-auto py-4 text-center-sm">
+                <a class="link button btn-danger squared" href="{% url 'doctor_delete' doctor_appointment.pk %}">Delete Record</a>
+            </div>
+        </div>
+        <!-- <a href="{% url 'doctor_edit' doctor_appointment.pk %}">Update Record</a> -->
+        <!-- <a href="{% url 'doctor_delete' doctor_appointment.pk %}">Delete Record</a> -->
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        var last_div_pos = document.querySelector('#last_div').getBoundingClientRect();
+        var footer =  document.querySelector('.footer');
+        var footer_pos = footer.getBoundingClientRect();
+        if (last_div_pos.bottom >= footer_pos.top) { // if there is an overlap
+            footer.classList.remove("fixed-bottom");
+        }
+    </script>
+{% endblock js %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <p class="text-center fs-3">Create New Record</p>
+    <form class="center-form width-100" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="container mt-3">
+            <label for="id_hospital_section">Hospital Section:
+        </div>
+        <div class="container">{{ form.hospital_section }}</div>
+
+        <div class="container mt-3">
+            <label for="id_presenting_complain">Presenting Compain:
+        </div>
+        <div class="container">{{ form.presenting_complain }}</div>
+
+        <div class="container mt-3">
+            <label for="id_history_of_presenting_complain">History of Presenting Complain:
+        </div>
+        <div class="container">{{ form.history_of_presenting_complain }}</div>
+
+        <div class="container mt-3">
+            <label for="id_past_medical_and_surgical_history">Past medical and Surgical History:
+        </div>
+        <div class="container">{{ form.past_medical_and_surgical_history  }}</div>
+
+        <div class="container mt-3">
+            <label for="id_drugs_and_allergies">Drugs and Allergies:
+        </div>
+        <div class="container">{{ form.drugs_and_allergies }}</div>
+
+        <div class="container mt-3">
+            <label for="id_family_and_social_history">Family and Social History:
+        </div>
+        <div class="container">{{ form.family_and_social_history }}</div>
+
+        <div class="container mt-3">
+            <label for="id_other_history">Other History:
+        </div>
+        <div class="container">{{ form.other_history }}</div>
+
+        <div class="container mt-3">
+            <label for="id_provisional_diagnosis">Provisional Diagnosis:
+        </div>
+        <div class="container">{{ form.provisional_diagnosis }}</div>
+
+        <div class="container mt-3">
+            <label for="id_physical_examination">Physical Examination:
+        </div>
+        <div class="container">{{ form.physical_examination }}</div>
+
+
+        <div class="container mt-3">
+            <label for="id_physical_examination">Lab Appointment:
+        </div>
+        <div class="container">{{ form.lab_appointment }}</div>
+        
+        <div class="container mt-3">
+            <label for="id_patient">Next Appointment:
+            <div class="">{{ form.next_appointment_date }}</div>
+        </div>
+        
+        <div class="container mt-4" id="last_div">
+            <input class="button squared button-dark" type="submit" value="Update Record">
+        </div>
+    </form>
+</div>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        var last_div_pos = document.querySelector('#last_div').getBoundingClientRect();
+        var footer =  document.querySelector('.footer');
+        var footer_pos = footer.getBoundingClientRect();
+        if (last_div_pos.bottom >= footer_pos.top) { // if there is an overlap
+            footer.classList.remove("fixed-bottom");
+        }
+    </script>
+{% endblock js %}
