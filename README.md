@@ -1,4 +1,4 @@
-# smart-emr-project
+# smart-emr-project 🥼🚑
 SmartEMR 🏥🩺 is version1.0 of a comprehensive electronic health record system, along with inventory and collections management features, tailored for small to mid-sized clinics.
 
 The application has features for storing patient information, doctor visit records, laboratory records and drug prescriptions.
